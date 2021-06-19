@@ -18,6 +18,7 @@ GFlagsValue *   getParamSpecFlags     (GParamSpec * p, guint * size)
 import "C"
 
 import (
+	"math"
 	"unsafe"
 )
 
@@ -71,7 +72,7 @@ func (p *ParamSpec) GetFlagValues() []*FlagsValue {
 	gFlags := C.getParamSpecFlags(p.paramSpec, &gSize)
 	size := int(gSize)
 	out := make([]*FlagsValue, size)
-	for idx, flag := range (*[1 << 30]C.GFlagsValue)(unsafe.Pointer(gFlags))[:size:size] {
+	for idx, flag := range (*[math.MaxInt16]C.GFlagsValue)(unsafe.Pointer(gFlags))[:size:size] {
 		out[idx] = &FlagsValue{
 			Value:     int(flag.value),
 			ValueNick: C.GoString(flag.value_nick),
